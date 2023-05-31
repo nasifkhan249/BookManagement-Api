@@ -1,3 +1,4 @@
+const { readdirSync } = require("fs");
 const express = require("express");
 const helmet = require("helmet");
 const morgan = require("morgan");
@@ -19,10 +20,12 @@ app.use(cors());
 const port = process.env.PORT || 8000
 
 
+readdirSync("./routers").map(r => app.use("/api/v1", require(`./routers/${r}`)));
+
 mongoose
     .connect(process.env.DATABASE)
     .then(()=>{
-        app.listen(()=>{
+        app.listen(port,()=>{
             console.log(`Server run on port ${port}`);
         });
     });
